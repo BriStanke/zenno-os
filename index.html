@@ -790,7 +790,11 @@ function driveConnect() {
     return;
   }
   driveSetStatus('syncing', 'Opening Google sign-in…');
-  const redirect = window.location.href.split('#')[0].split('?')[0];
+  // Build redirect URI — must match exactly what's registered in Google Cloud Console
+  // Strips query string, hash, and trailing index.html for consistency
+  const redirect = (window.location.origin + window.location.pathname)
+    .replace(/\/index\.html$/, '')  // remove index.html
+    .replace(/\/$/, '');            // remove trailing slash
   const url = 'https://accounts.google.com/o/oauth2/v2/auth' +
     '?client_id=' + encodeURIComponent(DRIVE_CLIENT_ID) +
     '&redirect_uri=' + encodeURIComponent(redirect) +
